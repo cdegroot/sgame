@@ -1,0 +1,21 @@
+
+DISCLAIMER: if you want to write games in Scala, don't use this :)
+
+Reason one: I'm not a game programmer
+Reason two: I'll probably never finish this
+
+Background: I dabbled in games a looong time ago (think DeSmet C'86 as your 
+toolchain). Wanting to go back, I did some digging and found, among others, 
+JGame (http://www.13thmonkey.org/~boris/jgame/). 
+
+JGame is pretty nice - it's very easy to whip up a quick game. However, with
+all due respect to its developer, I don't like the design of the code. 
+
+I also don't really like Java. 
+
+1+1 = 2, so I'm now porting JGame to Scala under the moniker 'sgame'. As my projects
+usually do, it probably won't go anywhere, but you can't blame me for trying, can you?
+
+(Oh - I also am a Scala n00b. So you are free to critique both my lack of game 
+coding knowledge *and* my ignorance of proper Scala idioms. Have fun!)
+
