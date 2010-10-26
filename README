@@ -4,7 +4,7 @@ DISCLAIMER: if you want to write games in Scala, don't use this :)
 Reason one: I'm not a game programmer
 Reason two: I'll probably never finish this
 
-Background: I dabbled in games a looong time ago (think DeSmet C'86 as your 
+Background: I dabbled in games a looong time ago (think DeSmet C86 as your 
 toolchain). Wanting to go back, I did some digging and found, among others, 
 JGame (http://www.13thmonkey.org/~boris/jgame/). 
 
