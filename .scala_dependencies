@@ -12,10 +12,6 @@
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/tutorial/Example1.scala -> /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/tutorial/Example1.scala
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/tutorial/Example1.scala -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/platform/JGEngine.java
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/tutorial/Example1.scala -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGPoint.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGRectangle.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGPoint.java
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/SGFont.scala -> /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/SGFont.scala
 /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/examples/StdDungeonPlayer.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java
 /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGFont.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGFont.java

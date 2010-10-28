@@ -94,8 +94,8 @@ public class Ogrotron extends StdGame {
 			score += 10;
 			remove();
 			obj.remove();
-			new JGObject("explo",true, x,y, 0,"explo_u",0,-4, expire_off_pf);
-			new JGObject("explo",true, x,y, 0,"explo_d",0,4, expire_off_pf);
+			new JGObject("explo",true, x,y, 0,"explo_u",0,-4, EXPIRE_OFF_PF);
+			new JGObject("explo",true, x,y, 0,"explo_d",0,4, EXPIRE_OFF_PF);
 		}
 	}
 	public class Player extends JGObject {
@@ -139,7 +139,7 @@ public class Ogrotron extends StdGame {
 				if (bulxspeed!=0 || bulyspeed!=0) {
 					bullettimer=8;
 					new JGObject("bullet",true, x,y, 2, "bullet",
-						-2.0*bulxspeed, -2.0*bulyspeed, expire_off_pf);
+						-2.0*bulxspeed, -2.0*bulyspeed, EXPIRE_OFF_PF);
 				}
 			} else {
 				bullettimer -= gamespeed;
@@ -156,10 +156,10 @@ public class Ogrotron extends StdGame {
 			if (invultimer<0) {
 				remove();
 				lifeLost();
-				new JGObject("explo",true,x,y, 0,"explo_u",0,-3, expire_off_pf);
-				new JGObject("explo",true,x,y, 0,"explo_d",0,3, expire_off_pf);
-				new JGObject("explo",true,x,y,0,"explo_u",0,-1.5,expire_off_pf);
-				new JGObject("explo",true,x,y,0,"explo_d",0, 1.5,expire_off_pf);
+				new JGObject("explo",true,x,y, 0,"explo_u",0,-3, EXPIRE_OFF_PF);
+				new JGObject("explo",true,x,y, 0,"explo_d",0,3, EXPIRE_OFF_PF);
+				new JGObject("explo",true,x,y,0,"explo_u",0,-1.5,EXPIRE_OFF_PF);
+				new JGObject("explo",true,x,y,0,"explo_d",0, 1.5,EXPIRE_OFF_PF);
 
 			}
 			//new StdScoring("pts",obj.x,obj.y,0,-1.0,40,"5 pts",scoring_font,

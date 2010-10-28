@@ -107,8 +107,6 @@ public class EngineLogic {
 	public JGColor render_bg_color=null; // null means use bg_color
 
 
-	/* objects */
-
 	public Objects objects = new Objects();
 
 	/** Total number of tiles on the playfield. Initially is the same as the
@@ -705,7 +703,7 @@ public class EngineLogic {
 	}
 
 	public void removeObjects(String prefix,int cidmask) {
-		objects.removeObjects(this, prefix,cidmask,true);
+		objects.removeObjects(prefix, cidmask,true);
 	}
 
 	/** Repaint those parts of BG which are undefined according to bg_defined.

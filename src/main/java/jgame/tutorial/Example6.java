@@ -54,7 +54,7 @@ public class Example6 extends JGEngine {
 				random(0,pfWidth()-20), random(0,pfHeight()-20), // pos
 				1, "ball", // cid, sprite
 				0, random(-2,2), // speed
-				JGObject.suspend_off_view // Suspend when off view.
+				JGObject.SUSPEND_OFF_VIEW // Suspend when off view.
 				    // Suspended objects will not move or participate in
 					// collisions.
 			);

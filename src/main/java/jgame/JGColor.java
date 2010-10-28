@@ -50,11 +50,4 @@ public class JGColor {
 		this.alpha = (int)(alpha*255.95);
 	}
 
-	public int getLastObjectIndex(EngineLogic engineLogic, String prefix) {
-		if (prefix==null) return engineLogic.objects.objects.size;
-		// XXX theoretically there may be strings with prefix
-		// lexicographically below this one
-		return -1-engineLogic.objects.objects.get(prefix+'\uffff');
-	}
-
 }

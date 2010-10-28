@@ -131,7 +131,7 @@ public class Example7 extends JGEngine {
 					// shoot a bullet in a random direction
 					new JGObject("bullet",true,x,y,2,"ball",
 						random(-5,5),random(-5,5),// speed
-						JGObject.expire_off_pf    // expiry mode
+						JGObject.EXPIRE_OFF_PF    // expiry mode
 					);
 				}
 			};

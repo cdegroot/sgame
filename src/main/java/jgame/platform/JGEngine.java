@@ -273,15 +273,15 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	/*====== objects from canvas ======*/
 
 	public void markAddObject(JGObject obj) {
-		el.objects.markAddObject(el, obj);
+		el.objects.markAddObject(obj);
 	}
 
 	public boolean existsObject(String index) {
-		return el.objects.existsObject(el, index);
+		return el.objects.existsObject(index);
 	}
 
 	public JGObject getObject(String index) {
-		return el.objects.getObject(el, index);
+		return el.objects.getObject(index);
 	}
 
 	public void moveObjects(String prefix, int cidmask) {
@@ -293,11 +293,11 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	}
 
 	public void checkCollision(int srccid,int dstcid) {
-		el.objects.checkCollision(el, this,srccid,dstcid);
+		el.objects.checkCollision(this, srccid,dstcid);
 	}
 
 	public int checkCollision(int cidmask, JGObject obj) {
-		return el.objects.checkCollision(el, cidmask,obj);
+		return el.objects.checkCollision(cidmask, obj);
 	}
 
 	public int checkBGCollision(JGRectangle r) {
@@ -312,12 +312,11 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 
 	public Vector getObjects(String prefix,int cidmask,boolean suspended_obj,
 	JGRectangle bbox) {
-		return el.objects.getObjects(el, prefix,cidmask,suspended_obj,
-			bbox);
+		return el.objects.getObjects(prefix, cidmask,suspended_obj,bbox);
 	}
 
 	public void removeObject(JGObject obj) {
-		el.objects.removeObject(el, obj);
+		el.objects.removeObject(obj);
 	}
 
 	public void removeObjects(String prefix,int cidmask) {
@@ -325,14 +324,14 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	}
 
 	public void removeObjects(String prefix,int cidmask,boolean suspended_obj) {
-		el.objects.removeObjects(el, prefix,cidmask,suspended_obj);
+		el.objects.removeObjects(prefix, cidmask,suspended_obj);
 	}
 	public int countObjects(String prefix,int cidmask) {
-		return el.objects.countObjects(el, prefix,cidmask);
+		return el.objects.countObjects(prefix, cidmask);
 	}
 
 	public int countObjects(String prefix,int cidmask,boolean suspended_obj) {
-		return el.objects.countObjects(el, prefix,cidmask,suspended_obj);
+		return el.objects.countObjects(prefix, cidmask,suspended_obj);
 	}
 
 
@@ -798,7 +797,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				// message from previous frame
 				setColor(g,debug_auxcolor1);
 			}
-			JGObject obj = el.objects.getObject(el, source);
+			JGObject obj = el.objects.getObject(source);
 			if (obj==null) {
 				// retrieve dead object
 				obj = (JGObject) dbgframelogs_obj.get(source);
@@ -890,7 +889,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				log.add("<messages truncated>");
 			}
 			dbgnewframelogs.put(source,log);
-			JGObject obj = el.objects.getObject(el, source);
+			JGObject obj = el.objects.getObject(source);
 			if (obj!=null) { // store source object
 				dbgframelogs_obj.put(source,obj);
 				dbgframelogs_dead.remove(source);
@@ -1389,13 +1388,13 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		jre.audioNewFrame();
 		// the first flush is needed to remove any objects that were created
 		// in the main routine after the last moveObjects or checkCollision
-		el.objects.flushRemoveList(el);
-		el.objects.flushAddList(el);
+		el.objects.flushRemoveList();
+		el.objects.flushAddList();
 		// tick timers before doing state transitions, because timers may
 		// initiate new transitions.
 		el.tickTimers();
-		el.objects.flushRemoveList(el);
-		el.objects.flushAddList(el);
+		el.objects.flushRemoveList();
+		el.objects.flushAddList();
 		// the game state transition starts here
 		el.gamestate = el.gamestate_nextframe;
 		el.gamestate_nextframe = new Vector(10,20);
@@ -1404,8 +1403,8 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		// transitions!
 		invokeGameStateMethods("start",el.gamestate_new);
 		el.gamestate_new.clear();
-		el.objects.flushRemoveList(el);
-		el.objects.flushAddList(el);
+		el.objects.flushRemoveList();
+		el.objects.flushAddList();
 		try {
 			doFrame();
 		} catch (JGameError ex) {
@@ -1414,7 +1413,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			dbgShowException("MAIN",ex);
 		}
 		invokeGameStateMethods("doFrame",el.gamestate);
-		el.objects.frameFinished(el);
+		el.objects.frameFinished();
 	}
 
 	private void invokeGameStateMethods(String prefix,Vector states) {

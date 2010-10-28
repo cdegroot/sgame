@@ -57,11 +57,11 @@ public class SpaceRunIII extends StdGame {
 						new JGObject("enemy",true,tileWidth()*x,
 							tileHeight()*(oldpos+tunnelheight/2),
 							2, "enemy", 0,0,16,16,
-							-1,0, JGObject.suspend_off_view);
+							-1,0, JGObject.SUSPEND_OFF_VIEW);
 					if (random(0,5) < 1)
 						new JGObject("pod",true,tileWidth()*x,
 							tileHeight()*(oldpos+random(2,tunnelheight-3,1)),
-							4, "pod", 0,0,14,14, 0,0, JGObject.suspend_off_view);
+							4, "pod", 0,0,14,14, 0,0, JGObject.SUSPEND_OFF_VIEW);
 					oldpos = tunnelpos;
 					tunnelpos += random(-1,1,2);
 					if (tunnelpos < 1) tunnelpos = 1;

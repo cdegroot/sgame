@@ -565,7 +565,7 @@ public class Guardian extends StdGame {
 			double angle = Math.atan2(player.x-x, player.y-y);
 			new JGObject("bullet",true, x+2,y+2, 64, "bullet",
 					bulspeed*Math.sin(angle),bulspeed*Math.cos(angle),
-					JGObject.expire_off_view );
+					JGObject.EXPIRE_OFF_VIEW );
 		}
 	}
 }

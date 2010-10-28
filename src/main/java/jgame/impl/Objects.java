@@ -29,9 +29,8 @@ public class Objects {
 	
 	/** Add new object now.  Old object with the same name is replaced
 	 * immediately, and its remove() method called.  
-	 * @param engineLogic TODO
 	 * @param obj TODO*/
-	void addObject(EngineLogic engineLogic, JGObject obj) {
+	void addObject(JGObject obj) {
 		int idx = objects.get(obj.getName());
 		if (idx >= 0) {
 			JGObject old_obj = (JGObject)objects.values[idx];
@@ -43,9 +42,8 @@ public class Objects {
 		objects.put(obj.getName(),obj);
 	}
 
-	/** Actually remove objects in obj_to_remove. 
-	 * @param engineLogic TODO*/
-	void doRemoveList(EngineLogic engineLogic) {
+	/** Actually remove objects in obj_to_remove. */
+	void doRemoveList() {
 		for (int i=0; i<obj_to_remove.size; i++) {
 			((JGObject)obj_to_remove.values[i]).removeDone();
 		}
@@ -54,22 +52,21 @@ public class Objects {
 	}
 
 	/** Add objects marked for addition. Protected.
-	 * @param engineLogic TODO
 	*/
-	public void flushAddList(EngineLogic engineLogic) {
+	public void flushAddList() {
 		// XXX we have to add one by one because we have to call the dispose
 		// method of the objects that are replaced
 		for (int i=0; i<obj_to_add.size; i++) {
-			addObject(engineLogic, (JGObject)obj_to_add.values[i]);
+			addObject((JGObject)obj_to_add.values[i]);
 		}
 		obj_to_add.clear();
 	}
 
-	public boolean existsObject(EngineLogic engineLogic, String index) {
+	public boolean existsObject(String index) {
 		return objects.get(index) >= 0;
 	}
 
-	public JGObject getObject(EngineLogic engineLogic, String index) {
+	public JGObject getObject(String index) {
 		int idx = objects.get(index);
 		if (idx<0) return null;
 		return (JGObject)objects.values[idx];
@@ -78,8 +75,8 @@ public class Objects {
 	public void moveObjects(EngineLogic engineLogic, JGEngineInterface eng, String prefix, int cidmask) {
 		if (in_parallel_upd) throw new JGameError("Recursive call",true);
 		in_parallel_upd=true;
-		int firstidx=engineLogic.objects.getFirstObjectIndex(engineLogic, prefix);
-		int lastidx=engineLogic.bg_color.getLastObjectIndex(engineLogic, prefix);
+		int firstidx=getFirstObjectIndex(prefix);
+		int lastidx=getLastObjectIndex(prefix);
 		for (int i=firstidx; i<lastidx; i++) {
 			JGObject o = (JGObject) objects.values[i];
 			if (cidmask!=0 && (o.colid&cidmask)==0) continue;
@@ -88,8 +85,8 @@ public class Objects {
 				if (o.resume_in_view
 				&&o.isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y)) o.resume();
 			} else {
-				if (o.expiry==JGObject.suspend_off_view
-				||  o.expiry==JGObject.suspend_off_view_expire_off_pf) {
+				if (o.expiry==JGObject.SUSPEND_OFF_VIEW
+				||  o.expiry==JGObject.SUSPEND_OFF_VIEW_EXPIRE_OFF_PF) {
 					if (!o.isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
 						o.suspend();
 				}
@@ -125,55 +122,51 @@ public class Objects {
 					o.expiry -= engineLogic.gamespeed;
 					if (o.expiry < 0) o.remove();
 				} else {
-					if (expiry==JGObject.expire_off_pf
-					||  expiry==JGObject.suspend_off_view_expire_off_pf) {
+					if (expiry==JGObject.EXPIRE_OFF_PF
+					||  expiry==JGObject.SUSPEND_OFF_VIEW_EXPIRE_OFF_PF) {
 						if (!o.isOnPF(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
 							o.remove();
 					}
-					if (expiry==JGObject.expire_off_view
+					if (expiry==JGObject.EXPIRE_OFF_VIEW
 					&& !o.isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
 						o.remove();
 				}
 			}
 		}
-		flushRemoveList(engineLogic);
+		flushRemoveList();
 		in_parallel_upd=false;
 	}
 
-	public void markAddObject(EngineLogic engineLogic, JGObject obj) {
+	public void markAddObject(JGObject obj) {
 		obj_to_add.put(obj.getName(),obj);
 	}
 
 	/** Mark object for removal. 
-	 * @param engineLogic TODO
 	 * @param index TODO*/
-	void markRemoveObject(EngineLogic engineLogic, String index) {
+	void markRemoveObject(String index) {
 		int idx = objects.get(index);
 		if (idx<0) return;
 		obj_to_remove.put(index,(JGObject)objects.values[idx]);
 	}
 
 	/** Mark object for removal. 
-	 * @param engineLogic TODO
 	 * @param obj TODO*/
-	void markRemoveObject(EngineLogic engineLogic, JGObject obj) {
+	void markRemoveObject(JGObject obj) {
 		obj_to_remove.put(obj.getName(),obj);
 	}
 
 	/** Actually remove object now 
-	 * @param engineLogic TODO
 	 * @param obj TODO*/
-	void doRemoveObject(EngineLogic engineLogic, JGObject obj) {
+	void doRemoveObject(JGObject obj) {
 		obj.removeDone();
 		objects.remove(obj.getName());
 	}
 
 	/** Mark all objects with given spec for removal. 
-	 * @param engineLogic TODO
 	 * @param prefix TODO
 	 * @param cidmask TODO
 	 * @param suspended_obj TODO*/
-	void markRemoveObjects(EngineLogic engineLogic, String prefix, int cidmask, boolean suspended_obj) {
+	void markRemoveObjects(String prefix, int cidmask, boolean suspended_obj) {
 		obj_spec_to_remove.addElement(prefix);
 		obj_spec_to_remove.addElement(new Integer(cidmask));
 		obj_spec_to_remove.addElement(new Boolean(suspended_obj));
@@ -184,14 +177,13 @@ public class Objects {
 	 * in obj_to_remove, it is left there. If do_remove_list is true, the
 	 * objects are removed and obj_to_remove is cleared.  Otherwise, the
 	 * objects to remove are just added to obj_to_remove. 
-	 * @param engineLogic TODO
 	 * @param prefix TODO
 	 * @param cidmask TODO
 	 * @param suspended_obj TODO
 	 * @param do_remove_list TODO*/
-	void doRemoveObjects(EngineLogic engineLogic, String prefix, int cidmask, boolean suspended_obj, boolean do_remove_list) {
-		int firstidx=engineLogic.objects.getFirstObjectIndex(engineLogic, prefix);
-		int lastidx=engineLogic.bg_color.getLastObjectIndex(engineLogic, prefix);
+	void doRemoveObjects(String prefix, int cidmask, boolean suspended_obj, boolean do_remove_list) {
+		int firstidx=getFirstObjectIndex(prefix);
+		int lastidx=getLastObjectIndex(prefix);
 		for (int i=firstidx; i<lastidx; i++) {
 			JGObject o = (JGObject) objects.values[i];
 			if (cidmask==0 || (o.colid&cidmask)!=0) {
@@ -200,7 +192,7 @@ public class Objects {
 				}
 			}
 		}
-		if (do_remove_list) doRemoveList(engineLogic);
+		if (do_remove_list) doRemoveList();
 		// if we enumerate backwards, we can remove elements inline without
 		// consistency problems
 		for (int i=obj_to_add.size-1; i>=0; i--) {
@@ -216,9 +208,8 @@ public class Objects {
 		}
 	}
 
-	/** protected, remove objects marked for removal. 
-	 * @param engineLogic TODO*/
-	public void flushRemoveList(EngineLogic engineLogic) {
+	/** protected, remove objects marked for removal. */
+	public void flushRemoveList() {
 		//for (Enumeration e=obj_to_remove.elements(); e.hasMoreElements();) {
 		//	String name = (String)e.nextElement();
 		//	JGObject o = (JGObject)objects.get(name);
@@ -234,19 +225,19 @@ public class Objects {
 				String prefix = (String) e.nextElement();
 				int cid = ((Integer)e.nextElement()).intValue();
 				boolean suspended_obj=((Boolean)e.nextElement()).booleanValue();
-				doRemoveObjects(engineLogic, prefix,cid,suspended_obj,false);
+				doRemoveObjects(prefix, cid,suspended_obj,false);
 			}
 			obj_spec_to_remove.removeAllElements();
 		}
 		// remove everything in one go
-		doRemoveList(engineLogic);
+		doRemoveList();
 	}
 
 	public void moveObjects(EngineLogic engineLogic, JGEngineInterface eng) {
 		moveObjects(engineLogic, eng,null,0); 
 	}
 
-	public void checkCollision(EngineLogic engineLogic, JGEngineInterface eng, int srccid, int dstcid) {
+	public void checkCollision(JGEngineInterface eng, int srccid, int dstcid) {
 		if (in_parallel_upd) throw new JGameError("Recursive call",true);
 		in_parallel_upd=true;
 		if (objects.size > srcobj.length) {
@@ -289,11 +280,11 @@ public class Objects {
 				}
 			}
 		}
-		flushRemoveList(engineLogic);
+		flushRemoveList();
 		in_parallel_upd=false;
 	}
 
-	public int checkCollision(EngineLogic engineLogic, int cidmask, JGObject obj) {
+	public int checkCollision(int cidmask, JGObject obj) {
 		JGRectangle bbox = obj.getBBox();
 		if (bbox==null) return 0;
 		int retcid=0;
@@ -359,16 +350,16 @@ public class Objects {
 				}
 			}
 		}
-		flushRemoveList(engineLogic);
+		flushRemoveList();
 		in_parallel_upd=false;
 	}
 
-	public Vector getObjects(EngineLogic engineLogic, String prefix, int cidmask, boolean suspended_obj, JGRectangle bbox) {
+	public Vector getObjects(String prefix, int cidmask, boolean suspended_obj, JGRectangle bbox) {
 		Vector objects_v = new Vector(50,100);
 		int nr_obj=0;
 		JGRectangle obj_bbox = tmprect1;
-		int firstidx=engineLogic.objects.getFirstObjectIndex(engineLogic, prefix);
-		int lastidx=engineLogic.bg_color.getLastObjectIndex(engineLogic, prefix);
+		int firstidx=getFirstObjectIndex(prefix);
+		int lastidx=getLastObjectIndex(prefix);
 		for (int i=firstidx; i<lastidx; i++) {
 			JGObject obj  = (JGObject)objects.values[i];
 			if (cidmask==0 || (obj.colid&cidmask)!=0) {
@@ -387,30 +378,30 @@ public class Objects {
 		return objects_v;
 	}
 
-	public void removeObject(EngineLogic engineLogic, JGObject obj) {
+	public void removeObject(JGObject obj) {
 		if (in_parallel_upd) { // queue remove
-			markRemoveObject(engineLogic, obj);
+			markRemoveObject(obj);
 		} else { // do remove immediately
-			doRemoveObject(engineLogic, obj);
+			doRemoveObject(obj);
 		}
 	}
 
-	public void removeObjects(EngineLogic engineLogic, String prefix, int cidmask, boolean suspended_obj) {
+	public void removeObjects(String prefix, int cidmask, boolean suspended_obj) {
 		if (in_parallel_upd) {
-			markRemoveObjects(engineLogic, prefix,cidmask,suspended_obj);
+			markRemoveObjects(prefix, cidmask,suspended_obj);
 		} else {
-			doRemoveObjects(engineLogic, prefix,cidmask,suspended_obj,true);
+			doRemoveObjects(prefix, cidmask,suspended_obj,true);
 		}
 	}
 
-	public int countObjects(EngineLogic engineLogic, String prefix, int cidmask) {
-		return engineLogic.objects.countObjects(engineLogic, prefix,cidmask,true);
+	public int countObjects(String prefix, int cidmask) {
+		return countObjects(prefix, cidmask,true);
 	}
 
-	public int countObjects(EngineLogic engineLogic, String prefix, int cidmask, boolean suspended_obj) {
+	public int countObjects(String prefix, int cidmask, boolean suspended_obj) {
 		int nr_obj=0;
-		int firstidx=engineLogic.objects.getFirstObjectIndex(engineLogic, prefix);
-		int lastidx=engineLogic.bg_color.getLastObjectIndex(engineLogic, prefix);
+		int firstidx=getFirstObjectIndex(prefix);
+		int lastidx=getLastObjectIndex(prefix);
 		for (int i=firstidx; i<lastidx; i++) {
 			JGObject obj = (JGObject) objects.values[i];
 			if (cidmask==0 || (obj.colid&cidmask)!=0) {
@@ -421,8 +412,16 @@ public class Objects {
 		}
 		return nr_obj;
 	}
+	
+	public int getLastObjectIndex(String prefix) {
+		if (prefix==null) return objects.size;
+		// XXX theoretically there may be strings with prefix
+		// lexicographically below this one
+		return -1 - objects.get(prefix+'\uffff');
+	}
 
-	int getFirstObjectIndex(EngineLogic engineLogic, String prefix) {
+
+	int getFirstObjectIndex(String prefix) {
 		if (prefix==null) return 0;
 		int firstidx = objects.get(prefix);
 		if (firstidx<0) firstidx = -1-firstidx;
@@ -430,9 +429,8 @@ public class Objects {
 	}
 
 	/** Do final update actions on objects after all frame updates finished.
-	* Protected. 
-	 * @param engineLogic TODO*/
-	public void frameFinished(EngineLogic engineLogic) {
+	* Protected. */
+	public void frameFinished() {
 		for (int i=0; i<objects.size; i++) {
 			((JGObject)objects.values[i]).frameFinished();
 		}

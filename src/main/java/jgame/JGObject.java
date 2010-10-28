@@ -110,16 +110,16 @@ public class JGObject {
 	public void dbgPrint(String msg) { eng.dbgPrint(name,msg); }
 
 	/** Expiry value: never expire. */
-	public static final int expire_never=-1;
+	public static final int EXPIRE_NEVER=-1;
 	/** Expiry value: expire when off playfield. */
-	public static final int expire_off_pf=-2;
+	public static final int EXPIRE_OFF_PF=-2;
 	/** Expiry value: expire when out of view. */
-	public static final int expire_off_view=-3;
+	public static final int EXPIRE_OFF_VIEW=-3;
 	/** Expiry value: suspend when out of view. */
-	public static final int suspend_off_view=-4;
+	public static final int SUSPEND_OFF_VIEW=-4;
 	/** Expiry value: suspend when out of view and expire when out of
 	* playfield.*/
-	public static final int suspend_off_view_expire_off_pf=-5;
+	public static final int SUSPEND_OFF_VIEW_EXPIRE_OFF_PF=-5;
 
 	/** Object position */
 	public double x=0, y=0;
@@ -187,8 +187,8 @@ public class JGObject {
 		// XXX the test on suspend should really be done after the
 		// constructor of the subclass is finished, in case the position is
 		// changed later in the constructor.
-		if ((int)expiry==suspend_off_view
-		||  (int)expiry==suspend_off_view_expire_off_pf) {
+		if ((int)expiry==SUSPEND_OFF_VIEW
+		||  (int)expiry==SUSPEND_OFF_VIEW_EXPIRE_OFF_PF) {
 			if (!isInView(eng.getOffscreenMarginX(),eng.getOffscreenMarginY()))
 				suspend();
 		}

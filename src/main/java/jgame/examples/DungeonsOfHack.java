@@ -321,7 +321,7 @@ public class DungeonsOfHack extends StdGame {
 			super("turret",true,x,y,4,"turret",32);
 			this.bulletrate=bulletrate;
 			this.bulletcount=(int)random(0,bulletrate);
-			if (isMidlet()) this.expiry = suspend_off_view;
+			if (isMidlet()) this.expiry = SUSPEND_OFF_VIEW;
 		}
 		public void move() {
 			super.move();
@@ -359,7 +359,7 @@ public class DungeonsOfHack extends StdGame {
 			} else {
 				setGraphic("coffin");
 			}
-			if (isMidlet()) this.expiry = suspend_off_view;
+			if (isMidlet()) this.expiry = SUSPEND_OFF_VIEW;
 		}
 		public void move() {
 			super.move();
@@ -372,7 +372,7 @@ public class DungeonsOfHack extends StdGame {
 							JGObject mushroom = new StdDungeonMonster(
 								"mushroom",true,x,y, 4, "mushroom",false,false,
 								MONSTERBLOCK_T,MONSTER_T, 1.0,player,false,0.0);
-							if (isMidlet()) mushroom.expiry = suspend_off_view;
+							if (isMidlet()) mushroom.expiry = SUSPEND_OFF_VIEW;
 						}
 					} else {
 						if (nr_demons < 40) new Demon(x,y,monster_firerate);
@@ -390,7 +390,7 @@ public class DungeonsOfHack extends StdGame {
 			home_in=player;
 			this.firerate=firerate;
 			this.firecount=(int)random(0,firerate);
-			if (isMidlet()) this.expiry = suspend_off_view;
+			if (isMidlet()) this.expiry = SUSPEND_OFF_VIEW;
 		}
 		public void move() {
 			super.move();
