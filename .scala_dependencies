@@ -16,15 +16,6 @@
 /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/examples/StdDungeonPlayer.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java
 /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGFont.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGFont.java
 /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGPoint.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGPoint.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGFont.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/Animation.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGImage.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGRectangle.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGPoint.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGColor.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGTimer.java
-/Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/impl/JGEngineInterface.java -> /Users/cdegroot/Workspace.scala/sgame/src/main/java/jgame/JGObject.java
 -------
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/SGColor.scala -> /Users/cdegroot/Workspace.scala/sgame/bin/com/cdegroot/sgame/SGColor.class
 /Users/cdegroot/Workspace.scala/sgame/src/main/scala/com/cdegroot/sgame/SGColor.scala -> /Users/cdegroot/Workspace.scala/sgame/bin/com/cdegroot/sgame/SGColor$.class

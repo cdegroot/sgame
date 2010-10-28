@@ -10,15 +10,13 @@ public class Objects {
 	/** Note: objects lock is used to synchronise object updating between
 	 * repaint thread and game thread.  The synchronize functions are found in
 	 * Engine.doFrameAll and Canvas.paint */
-	public SortedArray objects = new SortedArray(40);
-	public SortedArray obj_to_remove = new SortedArray(40);
+	public SortedArray<JGObject> objects = new SortedArray<JGObject>(40);
+	public SortedArray<JGObject> obj_to_remove = new SortedArray<JGObject>(40);
 	public Vector obj_spec_to_remove = new Vector();
-	public SortedArray obj_to_add = new SortedArray(40);
+	public SortedArray<JGObject> obj_to_add = new SortedArray<JGObject>(40);
 	
 	/** indicates when engine is inside a parallel object update (moveObjects,
 	 * check*Collision) */
-
-
 	boolean in_parallel_upd=false;
 
 	JGRectangle tmprect1 = new JGRectangle();
@@ -72,7 +70,7 @@ public class Objects {
 		return (JGObject)objects.values[idx];
 	}
 
-	public void moveObjects(EngineLogic engineLogic, JGEngineInterface eng, String prefix, int cidmask) {
+	public void moveObjects(EngineLogic engineLogic, DebugAndErrorHandlerInterface eng, String prefix, int cidmask) {
 		if (in_parallel_upd) throw new JGameError("Recursive call",true);
 		in_parallel_upd=true;
 		int firstidx=getFirstObjectIndex(prefix);
@@ -233,11 +231,11 @@ public class Objects {
 		doRemoveList();
 	}
 
-	public void moveObjects(EngineLogic engineLogic, JGEngineInterface eng) {
+	public void moveObjects(EngineLogic engineLogic, DebugAndErrorHandlerInterface eng) {
 		moveObjects(engineLogic, eng,null,0); 
 	}
 
-	public void checkCollision(JGEngineInterface eng, int srccid, int dstcid) {
+	public void checkCollision(DebugAndErrorHandlerInterface eng, int srccid, int dstcid) {
 		if (in_parallel_upd) throw new JGameError("Recursive call",true);
 		in_parallel_upd=true;
 		if (objects.size > srcobj.length) {
@@ -304,7 +302,7 @@ public class Objects {
 		return retcid;
 	}
 
-	public void checkBGCollision(EngineLogic engineLogic, JGEngineInterface eng, int tilecid, int objcid) {
+	public void checkBGCollision(EngineLogic engineLogic, DebugAndErrorHandlerInterface eng, int tilecid, int objcid) {
 		if (in_parallel_upd) throw new JGameError("Recursive call",true);
 		in_parallel_upd=true;
 		if (objects.size > srcobj.length) {

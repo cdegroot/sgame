@@ -17,7 +17,7 @@ package jgame.impl;
  * initialcapacity each time the capacity is exceeded.
 
  */
-public class SortedArray {
+public class SortedArray<T> {
 
 	int capacity;
 	int growspeed;
@@ -45,7 +45,7 @@ public class SortedArray {
 		size=startidx; 
 	}
 
-	public void put(SortedArray elem) {
+	public void put(SortedArray<T> elem) {
 		// go through elem, and
 		// (1) put the elements of which keys are already present
 		// (2) store the indexes of the elements of which keys are not present
@@ -84,7 +84,7 @@ public class SortedArray {
 		size=newsize;
 	}
 
-	public void put(String key,Object value) {
+	public void put(String key,T value) {
 		int idx = get(key);
 		if (idx>=0) {
 			keys[idx] = key;
@@ -122,7 +122,7 @@ public class SortedArray {
 		}
 	}
 
-	public void remove(SortedArray elem) {
+	public void remove(SortedArray<T> elem) {
 		int lowidx=size;
 		int oldsize=size;
 		for (int i=elem.size-1; i>=0; i--) {
