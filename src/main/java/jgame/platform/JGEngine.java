@@ -273,31 +273,31 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	/*====== objects from canvas ======*/
 
 	public void markAddObject(JGObject obj) {
-		el.markAddObject(obj);
+		el.objects.markAddObject(el, obj);
 	}
 
 	public boolean existsObject(String index) {
-		return el.existsObject(index);
+		return el.objects.existsObject(el, index);
 	}
 
 	public JGObject getObject(String index) {
-		return el.getObject(index);
+		return el.objects.getObject(el, index);
 	}
 
 	public void moveObjects(String prefix, int cidmask) {
-		el.moveObjects(this,prefix, cidmask);
+		el.objects.moveObjects(el, this,prefix, cidmask);
 	}
 
 	public void moveObjects() {
-		el.moveObjects(this);
+		el.objects.moveObjects(el, this);
 	}
 
 	public void checkCollision(int srccid,int dstcid) {
-		el.checkCollision(this,srccid,dstcid);
+		el.objects.checkCollision(el, this,srccid,dstcid);
 	}
 
 	public int checkCollision(int cidmask, JGObject obj) {
-		return el.checkCollision(cidmask,obj);
+		return el.objects.checkCollision(el, cidmask,obj);
 	}
 
 	public int checkBGCollision(JGRectangle r) {
@@ -305,19 +305,19 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	}
 
 	public void checkBGCollision(int tilecid,int objcid) {
-		el.checkBGCollision(this,tilecid,objcid);
+		el.objects.checkBGCollision(el, this,tilecid,objcid);
 	}
 
 	/* objects from engine */
 
 	public Vector getObjects(String prefix,int cidmask,boolean suspended_obj,
 	JGRectangle bbox) {
-		return el.getObjects(prefix,cidmask,suspended_obj,
+		return el.objects.getObjects(el, prefix,cidmask,suspended_obj,
 			bbox);
 	}
 
 	public void removeObject(JGObject obj) {
-		el.removeObject(obj);
+		el.objects.removeObject(el, obj);
 	}
 
 	public void removeObjects(String prefix,int cidmask) {
@@ -325,14 +325,14 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	}
 
 	public void removeObjects(String prefix,int cidmask,boolean suspended_obj) {
-		el.removeObjects(prefix,cidmask,suspended_obj);
+		el.objects.removeObjects(el, prefix,cidmask,suspended_obj);
 	}
 	public int countObjects(String prefix,int cidmask) {
-		return el.countObjects(prefix,cidmask);
+		return el.objects.countObjects(el, prefix,cidmask);
 	}
 
 	public int countObjects(String prefix,int cidmask,boolean suspended_obj) {
-		return el.countObjects(prefix,cidmask,suspended_obj);
+		return el.objects.countObjects(el, prefix,cidmask,suspended_obj);
 	}
 
 
@@ -679,7 +679,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			}
 			if (buffer!=null && background!=null) {
 				// block update thread
-				synchronized (el.objects) {
+				synchronized (el.objects.objects) {
 					// paint any part of bg which is not yet defined
 					el.repaintBG(JGEngine.this);
 					/* clear buffer */
@@ -721,8 +721,8 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 					//ArrayList sortedkeys = new ArrayList(el.objects.keySet());
 					//Collections.sort(sortedkeys);
 					//for (Iterator i=sortedkeys.iterator(); i.hasNext(); ) {
-					for (int i=0; i<el.objects.size; i++) {
-						drawObject(bufg, (JGObject)el.objects.values[i]);
+					for (int i=0; i<el.objects.objects.size; i++) {
+						drawObject(bufg, (JGObject)el.objects.objects.values[i]);
 					}
 					buf_gfx = null; // we're finished with the object drawing
 					/* draw status */
@@ -798,7 +798,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				// message from previous frame
 				setColor(g,debug_auxcolor1);
 			}
-			JGObject obj = el.getObject(source);
+			JGObject obj = el.objects.getObject(el, source);
 			if (obj==null) {
 				// retrieve dead object
 				obj = (JGObject) dbgframelogs_obj.get(source);
@@ -890,7 +890,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				log.add("<messages truncated>");
 			}
 			dbgnewframelogs.put(source,log);
-			JGObject obj = el.getObject(source);
+			JGObject obj = el.objects.getObject(el, source);
 			if (obj!=null) { // store source object
 				dbgframelogs_obj.put(source,obj);
 				dbgframelogs_dead.remove(source);
@@ -1389,13 +1389,13 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		jre.audioNewFrame();
 		// the first flush is needed to remove any objects that were created
 		// in the main routine after the last moveObjects or checkCollision
-		el.flushRemoveList();
-		el.flushAddList();
+		el.objects.flushRemoveList(el);
+		el.objects.flushAddList(el);
 		// tick timers before doing state transitions, because timers may
 		// initiate new transitions.
 		el.tickTimers();
-		el.flushRemoveList();
-		el.flushAddList();
+		el.objects.flushRemoveList(el);
+		el.objects.flushAddList(el);
 		// the game state transition starts here
 		el.gamestate = el.gamestate_nextframe;
 		el.gamestate_nextframe = new Vector(10,20);
@@ -1404,8 +1404,8 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		// transitions!
 		invokeGameStateMethods("start",el.gamestate_new);
 		el.gamestate_new.clear();
-		el.flushRemoveList();
-		el.flushAddList();
+		el.objects.flushRemoveList(el);
+		el.objects.flushAddList(el);
 		try {
 			doFrame();
 		} catch (JGameError ex) {
@@ -1414,7 +1414,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			dbgShowException("MAIN",ex);
 		}
 		invokeGameStateMethods("doFrame",el.gamestate);
-		el.frameFinished();
+		el.objects.frameFinished(el);
 	}
 
 	private void invokeGameStateMethods(String prefix,Vector states) {
@@ -1979,7 +1979,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				} else if (cur_time < target_time+(long)(500.0/el.fps)) {
 					// we lag behind less than 1/2 frame -> do full frame.
 					// This empirically produces the smoothest animation
-					synchronized (el.objects) {
+					synchronized (el.objects.objects) {
 						doFrameAll();
 						el.updateViewOffset();
 					}
@@ -2009,7 +2009,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 				//	target_time=cur_time + (long)(1000.0/el.fps);
 				} else {
 					// we lag behind a little -> frame skip
-					synchronized (el.objects) {
+					synchronized (el.objects.objects) {
 						doFrameAll();
 						el.updateViewOffset();
 					}

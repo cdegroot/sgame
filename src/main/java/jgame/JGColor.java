@@ -1,5 +1,7 @@
 package jgame;
 
+import jgame.impl.EngineLogic;
+
 /** Minimal replacement of java.awt.Color. */
 public class JGColor {
 
@@ -46,6 +48,13 @@ public class JGColor {
 		this.g = (int)(g*255.95);
 		this.b = (int)(b*255.95);
 		this.alpha = (int)(alpha*255.95);
+	}
+
+	public int getLastObjectIndex(EngineLogic engineLogic, String prefix) {
+		if (prefix==null) return engineLogic.objects.objects.size;
+		// XXX theoretically there may be strings with prefix
+		// lexicographically below this one
+		return -1-engineLogic.objects.objects.get(prefix+'\uffff');
 	}
 
 }

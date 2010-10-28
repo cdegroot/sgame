@@ -1,7 +1,7 @@
 package jgame.examples.dingbats;
 import jgame.*;
 import jgame.platform.*;
-import examples.StdScoring;
+import jgame.examples.StdScoring;
 
 public class Dingbats extends StdGame {
 

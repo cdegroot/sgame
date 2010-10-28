@@ -1,8 +1,8 @@
 package jgame.examples.matrixminer;
 import jgame.*;
 import jgame.platform.*;
-import examples.StdMazeMonster;
-import examples.StdMazePlayer;
+import jgame.examples.StdMazeMonster;
+import jgame.examples.StdMazePlayer;
 public class MatrixMiner extends StdGame {
 	JGColor intro_color = new JGColor(60,100,255);
 	public static void main(String [] args) {

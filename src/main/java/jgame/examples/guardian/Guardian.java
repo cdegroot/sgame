@@ -2,7 +2,7 @@ package jgame.examples.guardian;
 import jgame.*;
 import jgame.platform.*;
 import java.util.*;
-import examples.StdScoring;
+import jgame.examples.StdScoring;
 /** A minimal game using StdGame with default settings. */
 public class Guardian extends StdGame {
 	public static void main(String[]args) {new Guardian(parseSizeArgs(args,0));}
