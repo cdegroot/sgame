@@ -1,0 +1,40 @@
+sprites_map		ogrosprites16.png				0	0	16	16	0	0
+
+player			-	0	sprites_map	2	-
+
+player_l1		-	0	sprites_map	3	-
+player_l2		-	0	sprites_map	4	-
+player_l	player_l1;player_l2		0.3
+
+player_r1		-	0	sprites_map	3	x
+player_r2		-	0	sprites_map	4	x
+player_r	player_r1;player_r2		0.3
+
+ogre_1		-	0	sprites_map	0	-
+ogre_2		-	0	sprites_map	1	-
+
+ogre	ogre_1;ogre_2	0.3
+
+ogre2_1		-	0	sprites_map	12	-
+ogre2_2		-	0	sprites_map	13	-
+
+ogre2	ogre2_1;ogre2_2	0.3
+
+bonus_1		$	1	sprites_map	5	-
+bonus_2		%	1	sprites_map	6	-
+
+bullet_1	-	0	sprites_map	7	-
+bullet_2	-	0	sprites_map	8	-
+
+bullet	bullet_1;bullet_2		0.5
+
+explo_u1		-	0	sprites_map	9	-
+explo_u2		-	0	sprites_map	10	-
+explo_u		explo_u1;explo_u2	0.5
+
+explo_d1		-	0	sprites_map	9	y
+explo_d2		-	0	sprites_map	10	y
+explo_d		explo_d1;explo_d2	0.5
+
+pts		-	0	sprites_map	11	-
+
