@@ -1,6 +1,5 @@
 package jgame.impl;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import jgame.JGObject;
@@ -10,20 +9,34 @@ public class Objects {
 	/** Note: objects lock is used to synchronise object updating between
 	 * repaint thread and game thread.  The synchronize functions are found in
 	 * Engine.doFrameAll and Canvas.paint */
-	public SortedArray<JGObject> objects = new SortedArray<JGObject>(40);
-	public SortedArray<JGObject> obj_to_remove = new SortedArray<JGObject>(40);
-	public Vector obj_spec_to_remove = new Vector();
-	public SortedArray<JGObject> obj_to_add = new SortedArray<JGObject>(40);
+	public SortedArray<JGObject> objects = new SortedArray<JGObject>(40); // needed to lock in JGEngine
+
+	private SortedArray<JGObject> obj_to_remove = new SortedArray<JGObject>(40);
+	private SortedArray<JGObject> obj_to_add = new SortedArray<JGObject>(40);
+	
+	static class ObjectSpec {
+		String prefix;
+		int cidmask;
+		boolean suspended_obj;
+
+		ObjectSpec(String prefix, int cidmask, boolean suspended_obj) {
+			this.prefix = prefix;
+			this.cidmask = cidmask;
+			this.suspended_obj = suspended_obj;
+		}
+	}
+	
+	private Vector<ObjectSpec> obj_spec_to_remove = new Vector<ObjectSpec>();
 	
 	/** indicates when engine is inside a parallel object update (moveObjects,
 	 * check*Collision) */
-	boolean in_parallel_upd=false;
+	private boolean in_parallel_upd=false;
 
-	JGRectangle tmprect1 = new JGRectangle();
-	JGRectangle tmprect2 = new JGRectangle();
+	private JGRectangle tmprect1 = new JGRectangle();
+	private JGRectangle tmprect2 = new JGRectangle();
 
-	JGObject [] srcobj = new JGObject[50];
-	JGObject [] dstobj = new JGObject[50];
+	private JGObject [] srcobj = new JGObject[50];
+	private JGObject [] dstobj = new JGObject[50];
 	
 	/** Add new object now.  Old object with the same name is replaced
 	 * immediately, and its remove() method called.  
@@ -165,9 +178,7 @@ public class Objects {
 	 * @param cidmask TODO
 	 * @param suspended_obj TODO*/
 	void markRemoveObjects(String prefix, int cidmask, boolean suspended_obj) {
-		obj_spec_to_remove.addElement(prefix);
-		obj_spec_to_remove.addElement(new Integer(cidmask));
-		obj_spec_to_remove.addElement(new Boolean(suspended_obj));
+		obj_spec_to_remove.addElement(new ObjectSpec(prefix, cidmask, suspended_obj));
 	}
 
 	/** Actually remove objects with given spec, including those in obj_to_add
@@ -205,6 +216,10 @@ public class Objects {
 			}
 		}
 	}
+	
+	void doRemoveObjects(ObjectSpec objectSpec, boolean do_remove_list) {
+		doRemoveObjects(objectSpec.prefix, objectSpec.cidmask, objectSpec.suspended_obj, do_remove_list);
+	}
 
 	/** protected, remove objects marked for removal. */
 	public void flushRemoveList() {
@@ -218,12 +233,8 @@ public class Objects {
 		// add all query results from object specs to obj_to_remove
 		// don't enumerate when no elements (which is about 90% of the time)
 		if (obj_spec_to_remove.size()!=0) {
-			for (Enumeration e=obj_spec_to_remove.elements();
-			e.hasMoreElements(); ) {
-				String prefix = (String) e.nextElement();
-				int cid = ((Integer)e.nextElement()).intValue();
-				boolean suspended_obj=((Boolean)e.nextElement()).booleanValue();
-				doRemoveObjects(prefix, cid,suspended_obj,false);
+			for (ObjectSpec objectSpec: obj_spec_to_remove) {
+				doRemoveObjects(objectSpec, false);
 			}
 			obj_spec_to_remove.removeAllElements();
 		}
@@ -352,9 +363,8 @@ public class Objects {
 		in_parallel_upd=false;
 	}
 
-	public Vector getObjects(String prefix, int cidmask, boolean suspended_obj, JGRectangle bbox) {
-		Vector objects_v = new Vector(50,100);
-		int nr_obj=0;
+	public Vector<JGObject> getObjects(String prefix, int cidmask, boolean suspended_obj, JGRectangle bbox) {
+		Vector<JGObject> objects_v = new Vector<JGObject>(50,100);
 		JGRectangle obj_bbox = tmprect1;
 		int firstidx=getFirstObjectIndex(prefix);
 		int lastidx=getLastObjectIndex(prefix);
