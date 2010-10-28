@@ -1,6 +1,7 @@
 package jgame.platform;
 import jgame.impl.*;
 import jgame.*;
+
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.font.*;
@@ -211,130 +212,6 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	Graphics bgg=null;
 
 
-	/*====== images ======*/
-
-
-
-	public JGImage getImage(String imgname) {
-		return el.getImage(imgname);
-	}
-
-
-	public JGPoint getImageSize(String imgname) {
-		return el.getImageSize(imgname);
-	}
-
-	public void defineImage(String name, String tilename, int collisionid,
-	String imgfile, String img_op,
-	int top,int left, int width,int height) {
-		el.defineImage(this,name,tilename,collisionid,imgfile,img_op,
-			top,left, width,height);
-	}
-
-	public void defineImage(String imgname, String tilename, int collisionid,
-	String imgfile, String img_op) {
-		el.defineImage(this,imgname,tilename,collisionid,imgfile, img_op);
-	}
-
-	public void defineImage(String imgname, String tilename, int collisionid,
-	String imgmap, int mapidx, String img_op,
-	int top,int left, int width,int height) {
-		el.defineImage(imgname,tilename,collisionid,  imgmap, mapidx,
-			img_op, top,left,width,height );
-	}
-
-	public void defineImage(String imgname, String tilename, int collisionid,
-	String imgmap, int mapidx, String img_op) {
-		el.defineImage(imgname,tilename,collisionid, imgmap, mapidx, img_op);
-	}
-
-	public void defineImageRotated(String name, String tilename,
-	int collisionid, String srcname, double angle) {
-		el.defineImageRotated(this,name,tilename,collisionid, srcname, angle);
-	}
-
-	public void defineImageMap(String mapname, String imgfile,
-	int xofs,int yofs, int tilex,int tiley, int skipx,int skipy) {
-		el.defineImageMap(this,mapname,imgfile, xofs,yofs, tilex,tiley,
-			skipx,skipy);
-	}
-
-	public JGRectangle getImageBBox(String imgname) {
-		return el.getImageBBox(imgname);
-	}
-
-	public void defineMedia(String filename) {
-		el.defineMedia(this,filename);
-	}
-
-
-	/*====== PF/view ======*/
-
-
-	/*====== objects from canvas ======*/
-
-	public void markAddObject(JGObject obj) {
-		objects.markAddObject(obj);
-	}
-
-	public boolean existsObject(String index) {
-		return objects.existsObject(index);
-	}
-
-	public JGObject getObject(String index) {
-		return objects.getObject(index);
-	}
-
-	public void moveObjects(String prefix, int cidmask) {
-		objects.moveObjects(el, this,prefix, cidmask);
-	}
-
-	public void moveObjects() {
-		objects.moveObjects(el, this);
-	}
-
-	public void checkCollision(int srccid,int dstcid) {
-		objects.checkCollision(this, srccid,dstcid);
-	}
-
-	public int checkCollision(int cidmask, JGObject obj) {
-		return objects.checkCollision(cidmask, obj);
-	}
-
-	public int checkBGCollision(JGRectangle r) {
-		return el.checkBGCollision(r);
-	}
-
-	public void checkBGCollision(int tilecid,int objcid) {
-		objects.checkBGCollision(el, this,tilecid,objcid);
-	}
-
-	/* objects from engine */
-
-	public Vector getObjects(String prefix,int cidmask,boolean suspended_obj,
-	JGRectangle bbox) {
-		return objects.getObjects(prefix, cidmask,suspended_obj,bbox);
-	}
-
-	public void removeObject(JGObject obj) {
-		objects.removeObject(obj);
-	}
-
-	public void removeObjects(String prefix,int cidmask) {
-		objects.removeObjects(prefix,cidmask);
-	}
-
-	public void removeObjects(String prefix,int cidmask,boolean suspended_obj) {
-		objects.removeObjects(prefix, cidmask,suspended_obj);
-	}
-	public int countObjects(String prefix,int cidmask) {
-		return objects.countObjects(prefix, cidmask);
-	}
-
-	public int countObjects(String prefix,int cidmask,boolean suspended_obj) {
-		return objects.countObjects(prefix, cidmask,suspended_obj);
-	}
-
 
 	void drawObject(Graphics g, JGObject o) {
 		if (!o.is_suspended) {
@@ -349,50 +226,12 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			}
 		}
 		// note that the debug bbox of suspended objects will be visible
-		if ((debugflags&JGEngine.BBOX_DEBUG)!=0) {
-			setColor(g,el.fg_color);
-			JGRectangle bbox = o.getBBox();
-			if (bbox!=null) { // bounding box defined
-				//bbox.x -= xofs;
-				//bbox.y -= yofs;
-				bbox = el.scalePos(bbox,true);
-				g.drawRect(bbox.x,bbox.y,bbox.width,bbox.height);
-			}
-			bbox = o.getTileBBox();
-			if (bbox!=null) { // tile bounding box defined
-				//bbox.x -= xofs;
-				//bbox.y -= yofs;
-				bbox = el.scalePos(bbox,true);
-				g.drawRect(bbox.x,bbox.y,bbox.width,bbox.height);
-				setColor(g,debug_auxcolor1);
-				bbox = o.getTileBBox();
-				bbox = getTiles(bbox);
-				bbox.x *= el.tilex;
-				bbox.y *= el.tiley;
-				//bbox.x -= xofs;
-				//bbox.y -= yofs;
-				bbox.width *= el.tilex;
-				bbox.height *= el.tiley;
-				bbox = el.scalePos(bbox,true);
-				g.drawRect(bbox.x,bbox.y,bbox.width,bbox.height);
-				setColor(g,debug_auxcolor2);
-				bbox = o.getCenterTiles();
-				bbox.x *= el.tilex;
-				bbox.y *= el.tiley;
-				//bbox.x -= xofs;
-				//bbox.y -= yofs;
-				bbox.width *= el.tilex;
-				bbox.height *= el.tiley;
-				bbox = el.scalePos(bbox,true);
-				g.drawRect(bbox.x+2,bbox.y+2,bbox.width-4,bbox.height-4);
-			}
+		if ((debugFrame.debugflags&DebugFrame.BBOX_DEBUG)!=0) {
+			debugFrame.dbgDrawObjectBoundingBox(this, g, o);
 		}
 		//o.frameFinished();
 	}
 
-
-
-	/*====== BG/tiles ======*/
 
 	public void setBGImage(String bgimg) {
 		el.setBGImage(bgimg,0,true,true);
@@ -583,350 +422,60 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		canvas.setAuthorMessage(msg);
 	}
 
-	/** JGCanvas is internally used by JGEngine for updating and drawing objects
-	 * and tiles, and handling keyboard/mouse events. 
-	 */
-	class JGCanvas extends Canvas {
 
-		// part of the "official" method of handling keyboard focus
-		public boolean isFocusTraversable() { return true; }
+	DebugFrame debugFrame = new DebugFrame();
 
 
-		/*====== init stuff ======*/
-
-		public JGCanvas (int winwidth, int winheight) {
-			super();
-			setSize(winwidth,winheight);
-		}
-
-
-		/** Determines whether repaint will show the game graphics or do
-		 * nothing. */
-		boolean is_initialised=false;
-		/** paint interface that is used when the canvas is not initialised (for
-		 * displaying status info while starting up, loading files, etc. */
-		private ListCellRenderer initpainter=null;
-		String progress_message="Please wait, loading files .....";
-		String author_message="JGame 3.4";
-		/** for displaying progress bar, value between 0.0 - 1.0 */
-		double progress_bar=0.0;
-
-		void setInitialised() {
-			is_initialised=true; 
-			initpainter=null;
-		}
-		void setInitPainter(ListCellRenderer painter) {
-			initpainter=painter;
-		}
-		void setProgressBar(double pos) {
-			progress_bar=pos;
-			if (!is_initialised && initpainter!=null) repaint(100);
-		}
-		void setProgressMessage(String msg) {
-			progress_message=msg;
-			if (!is_initialised && initpainter!=null) repaint(100);
-		}
-		void setAuthorMessage(String msg) {
-			author_message=msg;
-			if (!is_initialised && initpainter!=null) repaint(100);
-		}
-
-		/*====== paint ======*/
-
-		/** Don't call directly. Use repaint().
-		*/
-		public void update(Graphics g) { paint(g); }
-
-		/** Don't call directly. Use repaint().
-		*/
-		public void paint(Graphics g) { try {
-			if (el.is_exited) {
-				paintExitMessage(g);
-				return;
-			}
-			if (!is_initialised) {
-				if (initpainter!=null) {
-					//if (buffer==null) {
-					//	buffer=createImage(width,height);
-					//}
-					//if (incremental_repaint) {
-						//initpainter.getListCellRendererComponent(null,
-					//			buffer.getGraphics(),0,true,false);
-					//	g.drawImage(buffer,0,0,this);
-					//} else {
-						initpainter.getListCellRendererComponent(null,
-								getGraphics(),0,false,false);
-					//}
-				}
-				return;
-			}
-			/* Each frame before the paint operation, we check if our possibly
-			 * volatile bg and buffer are still ok.  If so, we don't re-validate
-			 * every time, but leave them as persistent images until their
-			 * contents are eventually destroyed.  Then we always recreate them
-			 * even if their status is RESTORED.  Note that bg is indeed
-			 * persistent, and things are incrementally drawn on it during the
-			 * course of doFrames and paints.  If the buffer to be rendered to
-			 * screen is invalid when we render it to screen, we give up for this
-			 * frame and don't retry until the next frame. */
-			if (background==null||!JREImage.isScratchImageValid(background)) {
-				background=JREImage.createScratchImage(
-					el.width+3*el.scaledtilex,el.height+3*el.scaledtiley );
-				el.invalidateBGTiles();
-			}
-			if (buffer==null||!JREImage.isScratchImageValid(buffer)) {
-				buffer=JREImage.createScratchImage(el.width,el.height);
-			}
-			if (buffer!=null && background!=null) {
-				// block update thread
-				synchronized (objects.objects) {
-					// paint any part of bg which is not yet defined
-					el.repaintBG(JGEngine.this);
-					/* clear buffer */
-					Graphics bufg = buffer.getGraphics();
-					buf_gfx = bufg; // enable objects to draw on buffer gfx.
-					//bufg.setColor(getBackground());
-					//draw background to buffer
-					//bufg.drawImage(background,-scaledtilex,-scaledtiley,this);
-					int tilexshift=el.moduloFloor(el.tilexofs+1,el.viewnrtilesx+3);
-					int tileyshift=el.moduloFloor(el.tileyofs+1,el.viewnrtilesy+3);
-					int sx1 = tilexshift+1;
-					int sy1 = tileyshift+1;
-					int sx2 = el.viewnrtilesx+3;
-					int sy2 = el.viewnrtilesy+3;
-					if (sx2-sx1 > el.viewnrtilesx) sx2 = sx1 + el.viewnrtilesx;
-					if (sy2-sy1 > el.viewnrtilesy) sy2 = sy1 + el.viewnrtilesy;
-					int bufmidx = sx2-sx1;
-					int bufmidy = sy2-sy1;
-					copyBGToBuf(bufg,sx1,sy1, sx2,sy2, 0,0);
-					sx1 = 0;
-					sy1 = 0;
-					sx2 = tilexshift-1;
-					sy2 = tileyshift-1;
-					copyBGToBuf(bufg,sx1,sy1, sx2,sy2, bufmidx,bufmidy);
-					sx1 = 0;
-					sy1 = tileyshift+1;
-					sx2 = tilexshift-1;
-					sy2 = el.viewnrtilesy+3;
-					if (sy2-sy1 > el.viewnrtilesy) sy2 = sy1 + el.viewnrtilesy;
-					copyBGToBuf(bufg,sx1,sy1, sx2,sy2, bufmidx,0);
-					sx1 = tilexshift+1;
-					sy1 = 0;
-					sx2 = el.viewnrtilesx+3;
-					sy2 = tileyshift-1;
-					if (sx2-sx1 > el.viewnrtilesx) sx2 = sx1 + el.viewnrtilesx;
-					copyBGToBuf(bufg,sx1,sy1, sx2,sy2, 0,bufmidy);
-					//Color defaultcolour=g.getColor();
-					///* sort objects */
-					//ArrayList sortedkeys = new ArrayList(objects.keySet());
-					//Collections.sort(sortedkeys);
-					//for (Iterator i=sortedkeys.iterator(); i.hasNext(); ) {
-					for (int i=0; i<objects.objects.size; i++) {
-						drawObject(bufg, (JGObject)objects.objects.values[i]);
-					}
-					buf_gfx = null; // we're finished with the object drawing
-					/* draw status */
-					if (bufg!=null) paintFrame(bufg);
-					//}/*synchronized */
-					/* draw buffer */
-					g.drawImage(buffer,0,0,this);
-					//g.setColor(defaultcolour);
-				}
-				// don't block the update thread while waiting for sync
-				Toolkit.getDefaultToolkit().sync();
-			}
-		} catch (JGameError e) {
-			exitEngine("Error during paint:\n"
-					+dbgExceptionToString(e) );
-		} }
-
-	}
-
-
-
-
-
-
-	/*====== debug ======*/
-
-	//XXX state variable that was originally static
-	int debugflags = 8;
-	static final int BBOX_DEBUG = 1;
-	static final int GAMESTATE_DEBUG = 2;
-	static final int FULLSTACKTRACE_DEBUG = 4;
-	static final int MSGSINPF_DEBUG= 8;
-
-	private static int dbgframelog_expiry=80;
-	private JGFont debugmessage_font = new JGFont("Arial",0,12);
-	JGColor debug_auxcolor1 = JGColor.green;
-	JGColor debug_auxcolor2 = JGColor.magenta;
-
-	private Hashtable dbgframelogs = new Hashtable(); // old error msgs
-	private Hashtable dbgnewframelogs = new Hashtable(); // new error msgs
-	/** flags indicating messages are new */
-	private Hashtable dbgframelogs_new = new Hashtable();
-	/** objects that dbgframes correspond to (JGObject) */
-	private Hashtable dbgframelogs_obj = new Hashtable();
-	/** time that removed objects are dead (Integer) */
-	private Hashtable dbgframelogs_dead = new Hashtable();
-
-	/** Refresh message logs for this frame. */
-	private void refreshDbgFrameLogs() {
-		dbgframelogs_new = new Hashtable(); // clear "new" flag
-		for (Enumeration e=dbgnewframelogs.keys(); e.hasMoreElements();) {
-			String source = (String) e.nextElement();
-			Object log = dbgnewframelogs.get(source);
-			dbgframelogs.put(source,log);
-			dbgframelogs_new.put(source,"yes");
-		}
-		dbgnewframelogs = new Hashtable();
-	}
-
-	/** paint the messages */
-	void paintDbgFrameLogs(Graphics g) {
-		// we use an absolute font size
-		Font dbgfont = new Font(debugmessage_font.name,debugmessage_font.style,
-			(int)debugmessage_font.size);
-		g.setFont(dbgfont);
-		for (Enumeration e=dbgframelogs.keys(); e.hasMoreElements();) {
-			String source = (String) e.nextElement();
-			Vector log = (Vector) dbgframelogs.get(source);
-			if (dbgframelogs_new.containsKey(source)) {
-				// new message
-				setColor(g,el.fg_color);
-			} else {
-				// message from previous frame
-				setColor(g,debug_auxcolor1);
-			}
-			JGObject obj = objects.getObject(source);
-			if (obj==null) {
-				// retrieve dead object
-				obj = (JGObject) dbgframelogs_obj.get(source);
-				// message from deleted object
-				setColor(g,debug_auxcolor2);
-				if (obj!=null) {
-					// tick dead timer
-					int deadtime=0;
-					if (dbgframelogs_dead.containsKey(source)) 
-						deadtime = ((Integer)dbgframelogs_dead.get(source))
-							.intValue();
-					if (deadtime < dbgframelog_expiry) {
-						dbgframelogs_dead.put(source,new Integer(deadtime+1));
-					} else {
-						dbgframelogs_obj.remove(source);
-						dbgframelogs_dead.remove(source);
-					}
-				}
-			}
-			int lineheight = debugmessage_font.getSize()+1;
-			if (obj!=null) {
-				JGPoint scaled = el.scalePos(obj.x-el.xofs,
-					obj.y-el.yofs + lineheight/3,false);
-				scaled.y -= lineheight*log.size();
-				for (Enumeration f=log.elements(); f.hasMoreElements(); ) {
-					g.drawString((String)f.nextElement(),scaled.x,scaled.y);
-					scaled.y += lineheight;
-				}
-			} else {
-				if (!source.equals("MAIN")) {
-					dbgframelogs.remove(source);
-				} else {
-					if (dbgframelogs_new.containsKey(source)) {
-						// new message
-						setColor(g,el.fg_color);
-					} else {
-						// message from previous frame
-						setColor(debug_auxcolor1);
-					}
-					int ypos = el.scaleYPos(el.viewHeight(),false);
-					ypos -= lineheight*log.size();
-					for (Enumeration f=log.elements(); f.hasMoreElements(); ) {
-						g.drawString((String)f.nextElement(),0,ypos);
-						ypos += lineheight;
-					}
-				}
-			}
-		}
-	}
-
-	public void dbgShowBoundingBox(boolean enabled) {
-		if (enabled) debugflags |=  BBOX_DEBUG;
-		else         debugflags &= ~BBOX_DEBUG;
-	}
 
 	public void dbgShowGameState(boolean enabled) {
-		if (enabled) debugflags |=  GAMESTATE_DEBUG;
-		else         debugflags &= ~GAMESTATE_DEBUG;
+		debugFrame.dbgShowGameState(enabled);
 	}
 
 	public void dbgShowFullStackTrace(boolean enabled) {
-		if (enabled) debugflags |=  FULLSTACKTRACE_DEBUG;
-		else         debugflags &= ~FULLSTACKTRACE_DEBUG;
+		canvas.dbgShowFullStackTrace(this, enabled);
 	}
 
 	public void dbgShowMessagesInPf(boolean enabled) {
-		if (enabled) debugflags |=  MSGSINPF_DEBUG;
-		else         debugflags &= ~MSGSINPF_DEBUG;
+		debugFrame.dbgShowMessagesInPf(enabled);
 	}
 
-	public void dbgSetMessageExpiry(int ticks) {dbgframelog_expiry = ticks;}
+	public void dbgSetMessageExpiry(int ticks) {
+		debugFrame.dbgSetMessageExpiry(ticks);
+	}
 
-	public void dbgSetMessageFont(JGFont font) { debugmessage_font=font; }
+	public void dbgSetMessageFont(JGFont font) {
+		debugFrame.dbgSetMessageFont(font);
+	}
 
-	public void dbgSetDebugColor1(JGColor col) { debug_auxcolor1=col; }
+	public void dbgSetDebugColor1(JGColor col) {
+		debugFrame.dbgSetDebugColor1(col);
+	}
 
-	public void dbgSetDebugColor2(JGColor col) { debug_auxcolor2=col; }
+	public void dbgSetDebugColor2(JGColor col) {
+		debugFrame.dbgSetDebugColor2(col);
+	}
 
-
-	public void dbgPrint(String msg) { dbgPrint("MAIN",msg); }
+	public void dbgPrint(String msg) {
+		debugFrame.dbgPrint(this, msg);
+	}
 
 	public void dbgPrint(String source,String msg) {
-		if ((debugflags&MSGSINPF_DEBUG)!=0) {
-			Vector log = (Vector)dbgnewframelogs.get(source);
-			if (log==null) log = new Vector(5,15);
-			if (log.size() < 19) {
-				log.add(msg);
-			} else if (log.size() == 19) {
-				log.add("<messages truncated>");
-			}
-			dbgnewframelogs.put(source,log);
-			JGObject obj = objects.getObject(source);
-			if (obj!=null) { // store source object
-				dbgframelogs_obj.put(source,obj);
-				dbgframelogs_dead.remove(source);
-			}
-		} else {
-			System.out.println(source+": "+msg);
-		}
+		debugFrame.dbgPrint(this, source, msg);
 	}
 
 	public void dbgShowException(String source, Throwable e) {
-		ByteArrayOutputStream st = new ByteArrayOutputStream();
-		e.printStackTrace(new PrintStream(st));
-		if ((debugflags&FULLSTACKTRACE_DEBUG)!=0) {
-			dbgPrint(source,st.toString());
-		} else {
-			StringTokenizer toker = new StringTokenizer(st.toString(),"\n");
-			dbgPrint(source,toker.nextToken());
-			dbgPrint(source,toker.nextToken());
-			if (toker.hasMoreTokens())
-				dbgPrint(source,toker.nextToken());
-		}
+		debugFrame.dbgShowException(this, source, e);
 	}
 
+	public void dbgShowBoundingBox(boolean enabled) {
+		debugFrame.dbgShowBoundingBox(enabled);
+	}
+	
+	/**
+	 * @deprecated Use {@link jgame.platform.DebugFrame#dbgExceptionToString(Throwable)} instead
+	 */
 	public String dbgExceptionToString(Throwable e) {
-		ByteArrayOutputStream st = new ByteArrayOutputStream();
-		e.printStackTrace(new PrintStream(st));
-		if ((debugflags&FULLSTACKTRACE_DEBUG)!=0) {
-			return st.toString();
-		} else {
-			StringTokenizer toker = new StringTokenizer(st.toString(),"\n");
-			String ret = toker.nextToken()+"\n";
-			ret       += toker.nextToken()+"\n";
-			if (toker.hasMoreTokens())
-				ret   += toker.nextToken();
-			return ret;
-		}
+		return debugFrame.dbgExceptionToString(e);
 	}
 
 
@@ -1094,7 +643,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		}
 		//setAudioLatency(getAudioLatencyPlatformEstimate());
 
-		canvas = new JGCanvas(el.winwidth,el.winheight);
+		canvas = new JGCanvas(this, el.winwidth,el.winheight);
 		jre.canvas = canvas;
 	
 		el.initPF();
@@ -1194,7 +743,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		// initialise keyboard handling
 		canvas.addKeyListener(jre);
 		canvas.requestFocus();
-		thread = new Thread(new JGEngineThread());
+		thread = new Thread(new JGEngineThread(this));
 		thread.start();
 	}
 
@@ -1258,32 +807,6 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 
 	public void setViewZoomRotate(double zoom, double rotate) { }
 
-	public void setPFSize(int nrtilesx,int nrtilesy) {
-		el.setPFSize(nrtilesx,nrtilesy);
-	}
-
-	public void setPFWrap(boolean wrapx,boolean wrapy,int shiftx,int shifty) {
-		el.setPFWrap(wrapx,wrapy,shiftx,shifty);
-	}
-
-
-	public void setFrameRate(double fps, double maxframeskip) {
-		el.setFrameRate(fps, maxframeskip);
-	}
-
-	public void setVideoSyncedUpdate(boolean value) {}
-
-	public void setGameSpeed(double gamespeed) {
-		el.setGameSpeed(gamespeed);
-	}
-
-	public void setRenderSettings(int alpha_thresh,JGColor render_bg_col) {
-		el.setRenderSettings(alpha_thresh,render_bg_col);
-	}
-
-	public void setOffscreenMargin(int xmargin,int ymargin) {
-		el.setOffscreenMargin(xmargin,ymargin);
-	}
 
 
 	/** Set global background colour, which is displayed in borders, and behind
@@ -1358,35 +881,9 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 		el.registerTimer(timer);
 	}
 
-	/* game state */
-
-	public void setGameState(String state) {
-		el.setGameState(state);
-	}
-
-	public void addGameState(String state) {
-		el.addGameState(state);
-	}
-
-	public void removeGameState(String state) {
-		el.removeGameState(state);
-	}
-
-	public void clearGameState() {
-		el.clearGameState();
-	}
-
-
-	public boolean inGameState(String state) {
-		return el.inGameState(state);
-	}
-
-	public boolean inGameStateNextFrame(String state) {
-		return el.inGameStateNextFrame(state);
-	}
 
 	/** Do some administration, call doFrame. */
-	private void doFrameAll() {
+	void doFrameAll() {
 		jre.audioNewFrame();
 		// the first flush is needed to remove any objects that were created
 		// in the main routine after the last moveObjects or checkCollision
@@ -1439,7 +936,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			dbgShowException("MAIN",ex);
 		}
 		invokeGameStateMethods("paintFrame",el.gamestate);
-		if ((debugflags&GAMESTATE_DEBUG)!=0) {
+		if ((debugFrame.debugflags&DebugFrame.GAMESTATE_DEBUG)!=0) {
 			String state="{";
 			for (Enumeration e=el.gamestate.elements(); e.hasMoreElements(); ) {
 				state += (String)e.nextElement();
@@ -1451,7 +948,7 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 			drawString(state,el.viewWidth(),
 					el.viewHeight()-(int)getFontHeight(g,el.msg_font), 1);
 		}
-		if ((debugflags&MSGSINPF_DEBUG)!=0) paintDbgFrameLogs(buf_gfx);
+		if ((debugFrame.debugflags&DebugFrame.MSGSINPF_DEBUG)!=0) debugFrame.paintDbgFrameLogs(this, buf_gfx);
 		buf_gfx=null;
 	}
 
@@ -1767,37 +1264,6 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 //		}
 	}
 
-	/* input */
-
-	public JGPoint getMousePos() { return new JGPoint(jre.mousepos.x,jre.mousepos.y); }
-	public int getMouseX() { return jre.mousepos.x; }
-	public int getMouseY() { return jre.mousepos.y; }
-
-	public boolean getMouseButton(int nr) { return jre.mousebutton[nr]; }
-	public void clearMouseButton(int nr) { jre.mousebutton[nr]=false; }
-	public void setMouseButton(int nr) { jre.mousebutton[nr]=true; }
-	public boolean getMouseInside() { return jre.mouseinside; }
-
-	public boolean getKey(int key) { return jre.keymap[key]; }
-	public void clearKey(int key) { jre.keymap[key]=false; }
-	public void setKey(int key) { jre.keymap[key]=true; }
-
-	public int getLastKey() { return jre.lastkey; }
-	public char getLastKeyChar() { return jre.lastkeychar; }
-	public void clearLastKey() { jre.clearLastKey(); }
-
-	/** Non-static version for the sake of the interface. */
-	public String getKeyDesc(int key) { return JREEngine.getKeyDescStatic(key); }
-
-	public static String getKeyDescStatic(int key) { return JREEngine.getKeyDescStatic(key); }
-
-
-	/** Non-static version for the sake of the interface. */
-	public int getKeyCode(String keydesc) { return JREEngine.getKeyCodeStatic(keydesc); }
-
-	public static int getKeyCodeStatic(String keydesc) {
-		return JREEngine.getKeyCodeStatic(keydesc); 
-	}
 
 	/*====== animation ======*/
 
@@ -1849,13 +1315,13 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	}
 
 	void paintExitMessage(Graphics g) { try {
-		setFont(g,debugmessage_font);
+		setFont(g,debugFrame.debugmessage_font);
 		int height = (int) (getFontHeight(g,null) / el.y_scale_fac);
 		// clear background
 		setColor(g,el.bg_color);
 		drawRect(g, el.viewWidth()/2, el.viewHeight()/2,
 			9*el.viewWidth()/10, height*5, true,true, false);
-		setColor(g,debug_auxcolor2);
+		setColor(g,debugFrame.debug_auxcolor2);
 		// draw colour bars
 		drawRect(g, el.viewWidth()/2, el.viewHeight()/2 - 5*height/2,
 			9*viewWidth()/10, 5, true,true, false);
@@ -1876,225 +1342,206 @@ public abstract class JGEngine extends Applet implements JGEngineInterface {
 	} }
 
 
+	/// 100 % Delegation below :)
+
+	/*====== images ======*/
 
 
+
+	public JGImage getImage(String imgname) {
+		return el.getImage(imgname);
+	}
+
+
+	public JGPoint getImageSize(String imgname) {
+		return el.getImageSize(imgname);
+	}
+
+	public void defineImage(String name, String tilename, int collisionid,
+	String imgfile, String img_op,
+	int top,int left, int width,int height) {
+		el.defineImage(this,name,tilename,collisionid,imgfile,img_op,
+			top,left, width,height);
+	}
+
+	public void defineImage(String imgname, String tilename, int collisionid,
+	String imgfile, String img_op) {
+		el.defineImage(this,imgname,tilename,collisionid,imgfile, img_op);
+	}
+
+	public void defineImage(String imgname, String tilename, int collisionid,
+	String imgmap, int mapidx, String img_op,
+	int top,int left, int width,int height) {
+		el.defineImage(imgname,tilename,collisionid,  imgmap, mapidx,
+			img_op, top,left,width,height );
+	}
+
+	public void defineImage(String imgname, String tilename, int collisionid,
+	String imgmap, int mapidx, String img_op) {
+		el.defineImage(imgname,tilename,collisionid, imgmap, mapidx, img_op);
+	}
+
+	public void defineImageRotated(String name, String tilename,
+	int collisionid, String srcname, double angle) {
+		el.defineImageRotated(this,name,tilename,collisionid, srcname, angle);
+	}
+
+	public void defineImageMap(String mapname, String imgfile,
+	int xofs,int yofs, int tilex,int tiley, int skipx,int skipy) {
+		el.defineImageMap(this,mapname,imgfile, xofs,yofs, tilex,tiley,
+			skipx,skipy);
+	}
+
+	public JGRectangle getImageBBox(String imgname) {
+		return el.getImageBBox(imgname);
+	}
+
+	public void defineMedia(String filename) {
+		el.defineMedia(this,filename);
+	}
+
+
+	/*====== PF/view ======*/
+
+
+	/*====== objects from canvas ======*/
+
+	public void markAddObject(JGObject obj) {
+		objects.markAddObject(obj);
+	}
+
+	public boolean existsObject(String index) {
+		return objects.existsObject(index);
+	}
+
+	public JGObject getObject(String index) {
+		return objects.getObject(index);
+	}
+
+	public void moveObjects(String prefix, int cidmask) {
+		objects.moveObjects(el, this,prefix, cidmask);
+	}
+
+	public void moveObjects() {
+		objects.moveObjects(el, this);
+	}
+
+	public void checkCollision(int srccid,int dstcid) {
+		objects.checkCollision(this, srccid,dstcid);
+	}
+
+	public int checkCollision(int cidmask, JGObject obj) {
+		return objects.checkCollision(cidmask, obj);
+	}
+
+	public int checkBGCollision(JGRectangle r) {
+		return el.checkBGCollision(r);
+	}
+
+	public void checkBGCollision(int tilecid,int objcid) {
+		objects.checkBGCollision(el, this,tilecid,objcid);
+	}
+
+	/* objects from engine */
+
+	public Vector getObjects(String prefix,int cidmask,boolean suspended_obj, JGRectangle bbox) { return objects.getObjects(prefix, cidmask,suspended_obj,bbox); }
+	public void removeObject(JGObject obj) { objects.removeObject(obj); }
+	public void removeObjects(String prefix,int cidmask) { objects.removeObjects(prefix,cidmask); }
+	public void removeObjects(String prefix,int cidmask,boolean suspended_obj) { objects.removeObjects(prefix, cidmask,suspended_obj); }
+	public int countObjects(String prefix,int cidmask) { return objects.countObjects(prefix, cidmask); }
+	public int countObjects(String prefix,int cidmask,boolean suspended_obj) { return objects.countObjects(prefix, cidmask,suspended_obj); }
+	
+	public void setPFSize(int nrtilesx,int nrtilesy) { el.setPFSize(nrtilesx,nrtilesy); }
+	public void setPFWrap(boolean wrapx,boolean wrapy,int shiftx,int shifty) { el.setPFWrap(wrapx,wrapy,shiftx,shifty); }
+	public void setFrameRate(double fps, double maxframeskip) { el.setFrameRate(fps, maxframeskip); }
+	public void setVideoSyncedUpdate(boolean value) {}
+	public void setGameSpeed(double gamespeed) { el.setGameSpeed(gamespeed); }
+	public void setRenderSettings(int alpha_thresh,JGColor render_bg_col) { el.setRenderSettings(alpha_thresh,render_bg_col); }
+	public void setOffscreenMargin(int xmargin,int ymargin) { el.setOffscreenMargin(xmargin,ymargin); }
+	
+	/* game state */
+
+	public void setGameState(String state) { el.setGameState(state); }
+	public void addGameState(String state) { el.addGameState(state); }
+	public void removeGameState(String state) { el.removeGameState(state); }
+	public void clearGameState() { el.clearGameState(); }
+	public boolean inGameState(String state) { return el.inGameState(state); }
+	public boolean inGameStateNextFrame(String state) { return el.inGameStateNextFrame(state); }
+
+	/* input */
+
+	public JGPoint getMousePos() { return new JGPoint(jre.mousepos.x,jre.mousepos.y); }
+	public int getMouseX() { return jre.mousepos.x; }
+	public int getMouseY() { return jre.mousepos.y; }
+
+	public boolean getMouseButton(int nr) { return jre.mousebutton[nr]; }
+	public void clearMouseButton(int nr) { jre.mousebutton[nr]=false; }
+	public void setMouseButton(int nr) { jre.mousebutton[nr]=true; }
+	public boolean getMouseInside() { return jre.mouseinside; }
+
+	public boolean getKey(int key) { return jre.keymap[key]; }
+	public void clearKey(int key) { jre.keymap[key]=false; }
+	public void setKey(int key) { jre.keymap[key]=true; }
+
+	public int getLastKey() { return jre.lastkey; }
+	public char getLastKeyChar() { return jre.lastkeychar; }
+	public void clearLastKey() { jre.clearLastKey(); }
+
+	/** Non-static version for the sake of the interface. */
+	public String getKeyDesc(int key) { return JREEngine.getKeyDescStatic(key); }
+	public static String getKeyDescStatic(int key) { return JREEngine.getKeyDescStatic(key); }
+
+	/** Non-static version for the sake of the interface. */
+	public int getKeyCode(String keydesc) { return JREEngine.getKeyCodeStatic(keydesc); }
+	public static int getKeyCodeStatic(String keydesc) { return JREEngine.getKeyCodeStatic(keydesc); }
 
 
 	/* computation */
 
-	public boolean and(int value, int mask) {
-		return el.and(value, mask);
-	}
-
-	public double random(double min, double max) {
-		return el.random(min, max);
-	}
-
-	public double random(double min, double max, double interval) {
-		return el.random(min, max, interval);
-	}
-
-	public int random(int min, int max, int interval) {
-		return el.random(min, max, interval);
-	}
-
-	public double atan2(double y,double x) {
-		return Math.atan2(y,x);
-	}
+	public boolean and(int value, int mask) { return el.and(value, mask); }
+	public double random(double min, double max) { return el.random(min, max); }
+	public double random(double min, double max, double interval) { return el.random(min, max, interval); }
+	public int random(int min, int max, int interval) { return el.random(min, max, interval); }
+	public double atan2(double y,double x) { return Math.atan2(y,x); }
 
 
-	public JGPoint getTileIndex(double x, double y) {
-		return el.getTileIndex(x, y);
-	}
+	public JGPoint getTileIndex(double x, double y) { return el.getTileIndex(x, y); }
+	public JGPoint getTileCoord(int tilex, int tiley) { return el.getTileCoord(tilex, tiley); }
+	public JGPoint getTileCoord(JGPoint tileidx) { return el.getTileCoord(tileidx); }
 
-	public JGPoint getTileCoord(int tilex, int tiley) {
-		return el.getTileCoord(tilex, tiley);
-	}
+	public double snapToGridX(double x, double gridsnapx) { return el.snapToGridX(x, gridsnapx); }
+	public double snapToGridY(double y, double gridsnapy) { return el.snapToGridY(y, gridsnapy); }
+	public void snapToGrid(JGPoint p,int gridsnapx,int gridsnapy) { el.snapToGrid(p,gridsnapx,gridsnapy); }
 
-	public JGPoint getTileCoord(JGPoint tileidx) {
-		return el.getTileCoord(tileidx);
-	}
-
-	public double snapToGridX(double x, double gridsnapx) {
-		return el.snapToGridX(x, gridsnapx);
-	}
-
-	public double snapToGridY(double y, double gridsnapy) {
-		return el.snapToGridY(y, gridsnapy);
-	}
-
-	public void snapToGrid(JGPoint p,int gridsnapx,int gridsnapy) {
-		el.snapToGrid(p,gridsnapx,gridsnapy);
-	}
-
-	public boolean isXAligned(double x,double margin) {
-		return el.isXAligned(x,margin);
-	}
-
-	public boolean isYAligned(double y,double margin) {
-		return el.isYAligned(y,margin);
-	}
-
-	public double getXAlignOfs(double x) {
-		return el.getXAlignOfs(x);
-	}
-
-	public double getYAlignOfs(double y) {
-		return el.getYAlignOfs(y);
-	}
+	public boolean isXAligned(double x,double margin) { return el.isXAligned(x,margin); }
+	public boolean isYAligned(double y,double margin) { return el.isYAligned(y,margin); }
+	public double getXAlignOfs(double x) { return el.getXAlignOfs(x); }
+	public double getYAlignOfs(double y) { return el.getYAlignOfs(y); }
 
 	// XXX please test these two methods
 
-	public double getXDist(double x1, double x2) {
-		return el.getXDist(x1, x2);
-	}
-
-	public double getYDist(double y1, double y2) {
-		return el.getYDist(y1, y2);
-	}
-
-
-
-	/** Engine thread, executing game action. */
-	class JGEngineThread implements Runnable {
-		private long target_time=0; /* time at which next frame should start */
-		private int frames_skipped=0;
-		public JGEngineThread () {}
-		public void run() { try {
-			try {
-				initGame();
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new JGameError("Exception during initGame(): "+e);
-			}
-			canvas.setInitialised();
-			target_time = System.currentTimeMillis()+(long)(1000.0/el.fps);
-			while (!el.is_exited) {
-				if ((debugflags&MSGSINPF_DEBUG)!=0) refreshDbgFrameLogs();
-				long cur_time = System.currentTimeMillis();
-				if (!running) {
-					// wait in portions of 1/2 sec until running is set;
-					// reset target time
-					Thread.sleep(500);
-					target_time = cur_time+(long)(1000.0/el.fps);
-				} else if (cur_time < target_time+(long)(500.0/el.fps)) {
-					// we lag behind less than 1/2 frame -> do full frame.
-					// This empirically produces the smoothest animation
-					synchronized (objects.objects) {
-						doFrameAll();
-						el.updateViewOffset();
-					}
-					canvas.repaint();
-					frames_skipped=0;
-					if (cur_time+3 < target_time) {
-						//we even have some time left -> sleep it away
-						Thread.sleep(target_time-cur_time);
-					} else {
-						// we don't, just yield to give input handler and
-						// painter some time
-						Thread.yield();
-					}
-					target_time += (1000.0/el.fps);
-				//} else if (cur_time >
-				//target_time + (long)(1000.0*el.maxframeskip/el.fps)) {
-				//	// we lag behind more than the max # frames ->
-				//	// draw full frame and reset target time
-				//	synchronized (objects) {
-				//		doFrameAll();
-				//		el.updateViewOffset();
-				//	}
-				//	canvas.repaint();
-				//	frames_skipped=0;
-				//	// yield to give input handler + painter some time
-				//	Thread.yield();
-				//	target_time=cur_time + (long)(1000.0/el.fps);
-				} else {
-					// we lag behind a little -> frame skip
-					synchronized (objects.objects) {
-						doFrameAll();
-						el.updateViewOffset();
-					}
-					// if we skip too many frames in succession, draw a frame
-					if ((++frames_skipped) > el.maxframeskip) {
-						canvas.repaint();
-						frames_skipped=0;
-						target_time=cur_time + (long)(1000.0/el.fps);
-					} else {
-						target_time += (long)(1000.0/el.fps);
-					}
-					// yield to give input handler some time
-					Thread.yield();
-				}
-			}
-		} catch (InterruptedException e) {
-			/* exit thread when interrupted */
-			System.out.println("JGame thread exited.");
-		} catch (Exception e) {
-			dbgShowException("MAIN",e);
-		} catch (JGameError e) {
-			exitEngine("Error in main:\n"+dbgExceptionToString(e));
-		} }
-	}
-
-
-	/*===== audio =====*/
-
+	public double getXDist(double x1, double x2) { return el.getXDist(x1, x2); }
+	public double getYDist(double y1, double y2) { return el.getYDist(y1, y2); }
 
 	public void enableAudio() { jre.enableAudio(); }
-
 	public void disableAudio() { jre.disableAudio(); }
-
-	public void defineAudioClip(String clipid,String filename) {
-		el.defineAudioClip(this,clipid,filename);
-	}
-
+	public void defineAudioClip(String clipid,String filename) { el.defineAudioClip(this,clipid,filename); }
 	public String lastPlayedAudio(String channel) { return jre.lastPlayedAudio(channel); }
-
 	public void playAudio(String clipid) { jre.playAudio(this,clipid); }
-
-	public void playAudio(String channel,String clipid,boolean loop) {
-		jre.playAudio(this,channel,clipid,loop);
-	}
-
+	public void playAudio(String channel,String clipid,boolean loop) { jre.playAudio(this,channel,clipid,loop); }
 	public void stopAudio(String channel) { jre.stopAudio(channel); }
-
 	public void stopAudio() { jre.stopAudio(); }
 
 
 	/*===== store =====*/
 
-	public void storeWriteInt(String id,int value) {
-		jre.storeWriteInt(id,value);
-	}
-
-	public void storeWriteDouble(String id,double value) {
-		jre.storeWriteDouble(id,value);
-	}
-
-	public void storeWriteString(String id,String value) {
-		jre.storeWriteString(id,value);
-	}
-
-	public void storeRemove(String id) {
-		jre.storeRemove(id);
-	}
-
-	public boolean storeExists(String id) {
-		return jre.storeExists(id);
-	}
-
-	public int storeReadInt(String id,int undef) {
-		return jre.storeReadInt(id,undef);
-	}
-
-	public double storeReadDouble(String id,double undef) {
-		return jre.storeReadDouble(id,undef);
-	}
-
-	public String storeReadString(String id,String undef) {
-		return jre.storeReadString(id,undef);
-	}
-
-
+	public void storeWriteInt(String id,int value) { jre.storeWriteInt(id,value); }
+	public void storeWriteDouble(String id,double value) { jre.storeWriteDouble(id,value); }
+	public void storeWriteString(String id,String value) { jre.storeWriteString(id,value); }
+	public void storeRemove(String id) { jre.storeRemove(id); }
+	public boolean storeExists(String id) { return jre.storeExists(id); }
+	public int storeReadInt(String id,int undef) { return jre.storeReadInt(id,undef); }
+	public double storeReadDouble(String id,double undef) { return jre.storeReadDouble(id,undef); }
+	public String storeReadString(String id,String undef) { return jre.storeReadString(id,undef);}
 }
 

@@ -17,76 +17,6 @@ import java.util.Vector;
 public interface JGEngineInterface extends DebugAndErrorHandlerInterface {
 
 	// backend interface
-/*
-	// XXX should not be public
-	public void registerTimer(JGTimer timer);
-
-	public boolean inGameStateNextFrame(String state);
-
-	public void dbgPrint(String source,String msg);
-
-
-	public Point getTileIndex(double x, double y);
-
-	public Rectangle getTiles(Rectangle r);
-
-
-	public boolean isXAligned(double x,double margin);
-	public boolean isYAligned(double y,double margin);
-
-	public double snapToGridX(double x, double gridsnapx);
-	public double snapToGridY(double y, double gridsnapy);
-
-	public void snapToGrid(Point p,int gridsnapx,int gridsnapy);
-
-
-	// XXX maybe not public
-	public double moduloXPos(double x);
-
-	// XXX maybe not public
-	public double moduloYPos(double y);
-
-
-	public int checkBGCollision(Rectangle r);
-
-	public void checkBGCollision(int tilecid,int objcid);
-
-	public int checkCollision(int cidmask, JGObject obj);
-
-
-	public int viewXOfs();
-	public int viewYOfs();
-
-	public int viewWidth();
-	public int viewHeight();
-
-	public int pfTileWidth();
-	public int pfTileHeight();
-
-	public int pfWidth();
-	public int pfHeight();
-
-	public boolean pfWrapX();
-	public boolean pfWrapY();
-
-	public int getOffscreenMarginX();
-	public int getOffscreenMarginY();
-
-
-
-
-	// XXX should not be public
-	public void markAddObject(JGObject obj);
-
-	public void removeObject(JGObject obj);
-
-
-	// XXX should not be public
-	public Animation getAnimation(String id);
-
-
-	public Rectangle getImageBBox(String imgname);
-*/
 
 
 	/** Cursor keys for both regular and mobile keyboard. */
@@ -109,22 +39,6 @@ public interface JGEngineInterface extends DebugAndErrorHandlerInterface {
 	public static final int KeyTab=9;
 	/** Keymap equivalent of mouse button. */
 	public static final int KeyMouse1=256, KeyMouse2=257, KeyMouse3=258;
-
-
-
-	/** Keycode of cursor key. */
-	//public static final int KeyUp=38,KeyDown=40,KeyLeft=37,KeyRight=39;
-	//public static final int KeyShift=16;
-	//public static final int KeyCtrl=17;
-	//public static final int KeyAlt=18;
-	//public static final int KeyEsc=27;
-	//public static final int KeyEnter=10;
-	//public static final int KeyBackspace=127;
-	////public static final int KeyBackspace=KeyEvent.VK_BACK_SPACE;
-	//public static final int KeyTab=8;
-	////public static final int KeyTab=KeyEvent.VK_TAB;
-	/** Keymap equivalent of mouse button. */
-	//public static final int KeyMouse1=256, KeyMouse2=257, KeyMouse3=258;
 
 
 

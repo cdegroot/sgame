@@ -19,12 +19,12 @@ package jgame.impl;
  */
 public class SortedArray<T> {
 
-	int capacity;
-	int growspeed;
+	private int capacity;
+	private int growspeed;
 
-	public int size=0;
-	public String [] keys;
-	public Object [] values;
+	private int size = 0;
+	private String [] keys;
+	private Object [] values;
 
 	public SortedArray(int initialcapacity) {
 		capacity=initialcapacity;
@@ -150,6 +150,19 @@ public class SortedArray<T> {
 		clear(firstidx);
 	}
 
+	public int size() {
+		return size;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T valueAt(int pos) {
+		return (T) values[pos];
+	}
+	
+	public String keyAt(int pos) {
+		return keys[pos];
+	}
+	
 	public int get(String key) {
 		/*
 		// algorithm 2 (wikipedia)

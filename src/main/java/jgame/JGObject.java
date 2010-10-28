@@ -1,10 +1,13 @@
 package jgame;
+import jgame.impl.DebugAndErrorHandlerInterface;
+import jgame.impl.EngineLogic;
 import jgame.impl.JGEngineInterface;
 import jgame.impl.Animation;
 //import java.awt.*;
 //import java.awt.image.ImageObserver;
 //import java.io.Serializable;
 //import java.net.*;
+import jgame.impl.JGameError;
 
 /** Superclass for game objects, override to define animated game objects.
  * When an object is created, it is automatically registered with the
@@ -1144,5 +1147,59 @@ public class JGObject {
 
 	/** Override to define custom paint actions. */
 	public void paint() {}
+	public void move(EngineLogic engineLogic, DebugAndErrorHandlerInterface eng, int cidmask) {
+		if (cidmask!=0 && (colid&cidmask)==0) 
+			return;
+		// first, update suspend mode
+		if (is_suspended) {
+			if (resume_in_view
+			&&isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y)) resume();
+		} else {
+			if (expiry==JGObject.SUSPEND_OFF_VIEW
+			||  expiry==JGObject.SUSPEND_OFF_VIEW_EXPIRE_OFF_PF) {
+				if (!isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
+					suspend();
+			}
+		}
+		// move object
+		// we must ensure modulo is correct when object is suspended so
+		// that it will unsuspend properly
+		//o.moduloPos(); // is inlined below
+		if (engineLogic.pf_wrapx) x = engineLogic.moduloXPos(x);
+		if (engineLogic.pf_wrapy) y = engineLogic.moduloYPos(y);
+		if (!is_suspended) {
+			//o.moduloPos(); // is inlined below
+			if (engineLogic.pf_wrapx) x = engineLogic.moduloXPos(x);
+			if (engineLogic.pf_wrapy) y = engineLogic.moduloYPos(y);
+			try {
+				move();
+			} catch (JGameError ex) {
+				eng.exitEngine(eng.dbgExceptionToString(ex));
+			} catch (Exception ex) {
+				eng.dbgShowException(getName(),ex);
+			}
+			updateAnimation(engineLogic.gamespeed);
+			x += xdir*xspeed*engineLogic.gamespeed;
+			y += ydir*yspeed*engineLogic.gamespeed;
+			//o.moduloPos(); // is inlined below
+			if (engineLogic.pf_wrapx) x = engineLogic.moduloXPos(x);
+			if (engineLogic.pf_wrapy) y = engineLogic.moduloYPos(y);
+		}
+		// check expiry; object should not expire when suspended
+		if (!is_suspended) {
+			if (expiry >= 0) {
+				expiry -= engineLogic.gamespeed;
+				if (expiry < 0) remove();
+			} else {
+				if (expiry==JGObject.EXPIRE_OFF_PF
+				||  expiry==JGObject.SUSPEND_OFF_VIEW_EXPIRE_OFF_PF) {
+					if (!isOnPF(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
+						remove();
+				}
+				if (expiry==JGObject.EXPIRE_OFF_VIEW
+				&& !isInView(engineLogic.offscreen_margin_x,engineLogic.offscreen_margin_y))
+					remove();
+			}
+		}	}
 }
 
