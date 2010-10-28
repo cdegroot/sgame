@@ -107,8 +107,6 @@ public class EngineLogic {
 	public JGColor render_bg_color=null; // null means use bg_color
 
 
-	public Objects objects = new Objects();
-
 	/** Total number of tiles on the playfield. Initially is the same as the
 	* nr of tiles on the visible window (viewnrtilesx/y), but can be
 	* changed to define a playfield larger than the visible window. */
@@ -700,10 +698,6 @@ public class EngineLogic {
 
 	public int checkBGCollision(JGRectangle r) {
 		return getTileCid(getTiles(r));
-	}
-
-	public void removeObjects(String prefix,int cidmask) {
-		objects.removeObjects(prefix, cidmask,true);
 	}
 
 	/** Repaint those parts of BG which are undefined according to bg_defined.

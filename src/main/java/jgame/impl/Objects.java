@@ -434,5 +434,9 @@ public class Objects {
 		}
 	}
 
+	public void removeObjects(String prefix, int cidmask) {
+		removeObjects(prefix, cidmask,true);
+	}
+
 
 }
